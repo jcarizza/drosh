@@ -22,6 +22,7 @@ pip install -r requirements.txt
 export DROSH_DROPBOX_TOKEN='<your-dropbox-token>'
 export DROSH_DROPBOX_FOLDER='<your-dropbox-screehshots-folder>'
 export DROSH_SCREENSHOT_FOLDER='<your-system-screenshot-folder>'
+(env) python drosh.py
 ```
 
 ## Setup with supervisor
