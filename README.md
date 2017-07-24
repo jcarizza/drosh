@@ -13,7 +13,7 @@ Script to upload Shutter screenshots to Dropbox and show a notification with the
 
 ## Create Dropbox App
 
-Create a Dropbox App in https://www.dropbox.com/developers/apps with full access then in the OAuth2 section create your private access token and configure the script.
+Create a Dropbox App in https://www.dropbox.com/developers/apps with *full access* then in the OAuth2 section create your private access token and configure the script.
 
 ## Quick start
 ```
