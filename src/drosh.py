@@ -33,7 +33,11 @@ class Screenshot(object):
         """
         Send a desktop message
         """
-        subprocess.call(['notify-send', title, body])
+        try:
+            subprocess.call(['notify-send', title, body])
+        except FileNotFoundError:
+            # Try with kdialog
+            subprocess.run(['kdialog', '--title', title, '--passivepopup', body, '5'])
 
     def create_shared_link(self, path):
         """
