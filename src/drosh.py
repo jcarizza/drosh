@@ -53,7 +53,7 @@ class Screenshot(object):
 class Drosh(object):
 
     def __init__(self, folder=DROSH_DROPBOX_FOLDER):
-        self.client = dropbox.dropbox.Dropbox(DROSH_DROPBOX_TOKEN)
+        self.client = dropbox.dropbox.Dropbox(DROSH_DROPBOX_TOKEN, timeout=30.0)
 
     def create_shared_link(self, path):
         for i in range(6): 
@@ -63,7 +63,6 @@ class Drosh(object):
                     settings=None
                 )
                 return success
-                break
             except Exception as e:
                 logger.error('Trying %s time: Error to create shared link %r', i, e)
                 time.sleep(i * 1.5)
@@ -72,6 +71,7 @@ class Drosh(object):
 def main():
     """
     Watch for new files where screenshots are saved and create the shared link
+    once the file is uploaded by Dropbox client
     """
 
     i = inotify.adapters.Inotify()
