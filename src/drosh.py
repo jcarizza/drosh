@@ -7,7 +7,7 @@ import logging
 import os
 import time
 import subprocess
-
+import pyperclip
 
 import inotify.adapters
 import dropbox
@@ -49,6 +49,7 @@ class Screenshot(object):
         result = dbox.create_shared_link(path)
         if result is not None:
             logger.debug('Shared link created %r for %r file', result.url, path)
+            pyperclip.copy(result.url)
             return result.url
         else:
             logger.debug('Error in create shared link for %r file', path)
