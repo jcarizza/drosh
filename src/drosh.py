@@ -24,13 +24,13 @@ logger = logging.getLogger(__name__)
 
 class Screenshot(object):
     def __init__(self, path):
-        fileOnDropbox = self.upload_file(path)
-        url = self.create_shared_link(fileOnDropbox)
+        file_on_dropbox = self.upload_file(path)
+        url = self.create_shared_link(file_on_dropbox)
         if url is None:
-            self.notify('Drosh', 'Error al crear link compartido')
+            self.notify('Drosh', 'Error in create shared link')
         else:
             self.notify('Drosh', url)
-            
+
 
     def notify(self, title, body):
         """
@@ -48,16 +48,16 @@ class Screenshot(object):
         """
 
         dbox = Drosh()
-        pathLocal = os.path.join(DROSH_SCREENSHOT_FOLDER, os.path.basename(path.decode('utf8')))
-        pathRemote = os.path.join(DROSH_DROPBOX_FOLDER, os.path.basename(path.decode('utf8')))
-        result = dbox.files_upload(pathLocal, pathRemote)
+        path_local = os.path.join(DROSH_SCREENSHOT_FOLDER, os.path.basename(path.decode('utf8')))
+        path_remote = os.path.join(DROSH_DROPBOX_FOLDER, os.path.basename(path.decode('utf8')))
+        result = dbox.files_upload(path_local, path_remote)
 
         if result is not None:
             logger.debug('File %r uploaded successfully', result.path_display)
 
             return result.path_display
         else:
-            logger.debug('Error in upload %r file', pathRemote)
+            logger.debug('Error in upload %r file', path_remote)
 
     def create_shared_link(self, path):
         """
@@ -69,7 +69,10 @@ class Screenshot(object):
         result = dbox.create_shared_link(path)
         if result is not None:
             logger.debug('Shared link created %r for %r file', result.url, path)
-            pyperclip.copy(result.url)
+            try:
+                pyperclip.copy(result.url)
+            except pyperclip.PyperclipException:
+                pass
             return result.url
         else:
             logger.debug('Error in create shared link for %r file', path)
@@ -77,7 +80,7 @@ class Screenshot(object):
 
 class Drosh(object):
 
-    def __init__(self, folder=DROSH_DROPBOX_FOLDER):
+    def __init__(self):
         self.client = dropbox.dropbox.Dropbox(DROSH_DROPBOX_TOKEN, timeout=30.0)
 
     def get_file_size(self, filename):
@@ -91,24 +94,24 @@ class Drosh(object):
         if (i > 6):
             return -1
 
-        fileSize = self.get_file_size(filename)
+        file_size = self.get_file_size(filename)
 
-        if (fileSize > 0):
+        if (file_size > 0):
             return open(filename, 'rb')
         else:
             time.sleep(1) # sometimes file is empty when we try to upload it
             i = i+1
             return self.get_local_file(filename, i)
 
-    def files_upload(self, pathLocal, pathRemote):
-        fileLocal = self.get_local_file(pathLocal, 0)
-        logger.debug("Uploading %s to Dropbox as %s", pathLocal, pathRemote)
+    def files_upload(self, path_local, path_remote):
+        file_local = self.get_local_file(path_local, 0)
+        logger.debug("Uploading %s to Dropbox as %s", path_local, path_remote)
 
         # We use WriteMode=overwrite to make sure that the settings in the file are changed on upload
         try:
             success = self.client.files_upload(
-                fileLocal.read(),
-                pathRemote,
+                file_local.read(),
+                path_remote,
                 mode=WriteMode('overwrite'),
                 autorename=True
             )
