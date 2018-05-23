@@ -124,13 +124,23 @@ class Drosh(object):
                 logger.error('Error %r', err)
                 sys.exit()
 
+    def check_if_link_is_created(self, path):
+        result = self.client.sharing_list_shared_links(path, None, True)
+
+        if not result.links:
+            return 0
+        else:
+            return result.links[0]
+
     def create_shared_link(self, path):
         for i in range(6):
             try:
-                success = self.client.sharing_create_shared_link_with_settings(
-                    path=path,
-                    settings=None
-                )
+                link = self.check_if_link_is_created(path)
+                if (link == 0):
+                    success = self.client.sharing_create_shared_link_with_settings(path=path, settings=None)
+                else:
+                    success = link
+
                 return success
             except Exception as e:
                 logger.error('Trying %s time: Error to create shared link %r', i, e)
@@ -149,7 +159,8 @@ def main():
         for event in i.event_gen():
             if event is not None:
                 (header, type_names, watch_path, filename) = event
-                if 'IN_CREATE' in type_names:
+
+                if ('IN_CLOSE_WRITE' in type_names):
                     logger.debug("WD=(%d) MASK=(%d) COOKIE=(%d) LEN=(%d) MASK->NAMES=%s "
                                  "WATCH-PATH=[%s] FILENAME=[%s]",
                                  header.wd, header.mask, header.cookie, header.len, type_names,
