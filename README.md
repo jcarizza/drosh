@@ -53,17 +53,17 @@ environment=DROSH_DROPBOX_TOKEN='<your-dropbox-token>',DROSH_DROPBOX_FOLDER='<yo
 ```
 
 
-# Contributors
+### Contributors
 - [zamoroka](https://github.com/zamoroka)
 
 
 ### Troubleshooting
 
-## The notification does not appear on my desktop
+#### The notification does not appear on my desktop
 There is some problem with the env var `DISPLAY` or check the permision of your supervisorfile. You can see the discussion on this thread https://github.com/jcarizza/drosh/issues/3
 
 
-## Pyperclip could not find a copy/paste mechanism for your system
+#### Pyperclip could not find a copy/paste mechanism for your system
 
 Maybe you need some extra requirements, Pyperclip uses gtk or PyQt4 to access the paper clim. https://github.com/asweigart/pyperclip/blob/master/docs/introduction.rst
 
