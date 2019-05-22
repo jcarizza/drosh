@@ -22,8 +22,9 @@ DEFAULT_LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logger = logging.getLogger(__name__)
 
 
-class Screenshot(object):
+class ScreenshotHandler(object):
     def __init__(self, path):
+        self.uploader = DropboxUploader()
         file_on_dropbox = self.upload_file(path)
         url = self.create_shared_link(file_on_dropbox)
         if url is None:
@@ -47,10 +48,9 @@ class Screenshot(object):
         Upload file
         """
 
-        dbox = Drosh()
-        path_local = os.path.join(DROSH_SCREENSHOT_FOLDER, os.path.basename(path.decode('utf8')))
-        path_remote = os.path.join(DROSH_DROPBOX_FOLDER, os.path.basename(path.decode('utf8')))
-        result = dbox.files_upload(path_local, path_remote)
+        path_local = os.path.join(DROSH_SCREENSHOT_FOLDER, os.path.basename(path))
+        path_remote = os.path.join(DROSH_DROPBOX_FOLDER, os.path.basename(path))
+        result = self.uploader.files_upload(path_local, path_remote)
 
         if result is not None:
             logger.debug('File %r uploaded successfully', result.path_display)
@@ -64,9 +64,7 @@ class Screenshot(object):
         Create shared link
         """
 
-        dbox = Drosh()
-
-        result = dbox.create_shared_link(path)
+        result = self.uploader.create_shared_link(path)
         if result is not None:
             logger.debug('Shared link created %r for %r file', result.url, path)
             try:
@@ -78,7 +76,7 @@ class Screenshot(object):
             logger.debug('Error in create shared link for %r file', path)
 
 
-class Drosh(object):
+class DropboxUploader(object):
 
     def __init__(self):
         self.client = dropbox.dropbox.Dropbox(DROSH_DROPBOX_TOKEN, timeout=30.0)
@@ -169,7 +167,7 @@ def main():
                                  header.wd, header.mask, header.cookie, header.len, type_names,
                                  watch_path.decode('utf-8'), filename.decode('utf-8'))
                     logger.info('Upload and create shared link for: %r', filename)
-                    Screenshot(filename)
+                    ScreenshotHandler(filename)
     finally:
         i.remove_watch(bytes(DROSH_SCREENSHOT_FOLDER.encode('utf8')))
 
