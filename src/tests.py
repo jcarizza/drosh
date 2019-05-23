@@ -6,14 +6,18 @@ from unittest.mock import patch
 
 from drosh import ScreenshotHandler
 
-class TestScreenshot(unittest.TestCase):
+class TestScreenshotHandler(unittest.TestCase):
 
     @patch('drosh.ScreenshotHandler.notify')
     @patch('drosh.ScreenshotHandler.upload_file')
     @patch('drosh.ScreenshotHandler.create_shared_link')
     def test_screenshot_calls(self, create_shared_link, upload_file, notify):
+        """Test essential methods.
+
+        This class should call three methods one time.
+        """
         tmp_file = NamedTemporaryFile()
-        screenshot = ScreenshotHandler(tmp_file)
+        ScreenshotHandler(tmp_file)
         upload_file.assert_called_once()
         create_shared_link.assert_called_once()
         notify.assert_called_once()
@@ -22,6 +26,10 @@ class TestScreenshot(unittest.TestCase):
     @patch('drosh.DropboxUploader.files_upload')
     @patch('drosh.DropboxUploader.create_shared_link')
     def test_dropbox_uploader_methods(self, create_shared_link, files_upload, notify):
+        """Test uploader.
+
+        When instantiated an screanshot handler should
+        use the uploader to create link and upload the file"""
 
         with NamedTemporaryFile() as f:
             url = 'https://example.com/image'

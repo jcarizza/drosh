@@ -9,6 +9,8 @@ verify_ssl = true
 dropbox = "*"
 inotify = "*"
 pyperclip = "*"
+python-coveralls = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.6"
