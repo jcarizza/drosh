@@ -40,10 +40,19 @@ DISPLAY - Your X Server screen, ":0.0" by default. https://askubuntu.com/questio
 ```
 
 
-### Supervisor script
+### Use in console for upload one file
+```
+python drosh.py --upload screenshot.png
+
+Share this link!
+https://www.dropbox.com/s/8uzja12dawdadfpdci91fi/screenshot.png?dl=0
+
+```
+
+### Supervisor script to run on watch mode
 ```
 [program:drosh]
-command=<full-path-virtualenv>/bin/python <path-to-drosh>/drosh.py
+command=<full-path-virtualenv>/bin/python <path-to-drosh>/drosh.py --watch
 user=<your-username>
 autostart=true
 autorestart=true
