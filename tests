@@ -1,0 +1,7 @@
+export DROSH_DROPBOX_FOLDER='/Capturas'
+export DROSH_SCREENSHOT_FOLDER='/tmp'
+export DROSH_DROPBOX_TOKEN='foo'
+
+cd src
+
+python -m unittest tests.py
