@@ -19,9 +19,9 @@ class TestScreenshotHandler(unittest.TestCase):
         """
         tmp_file = NamedTemporaryFile()
         ScreenshotHandler(tmp_file)
-        upload_file.assert_called_once()
-        create_shared_link.assert_called_once()
-        notify.assert_called_once()
+        assert upload_file.call_count == 1
+        assert create_shared_link.call_count == 1
+        assert notify.call_count == 1
 
     @patch("drosh.ScreenshotHandler.notify")
     @patch("drosh.DropboxUploader.files_upload")
