@@ -2,19 +2,20 @@
 Listen to new files and create a shared link on Dropbox
 """
 
+
 import sys
 import argparse
 import logging
 import os
 import time
 import subprocess
-import pyperclip
 
+import pyperclip
 import inotify.adapters
 import dropbox
-
 from dropbox.files import WriteMode
-from dropbox.exceptions import ApiError, AuthError
+from dropbox.exceptions import ApiError
+
 
 DROSH_DROPBOX_TOKEN = os.getenv("DROSH_DROPBOX_TOKEN")
 DROSH_DROPBOX_FOLDER = os.getenv("DROSH_DROPBOX_FOLDER")
@@ -98,23 +99,24 @@ class DropboxUploader(object):
             return -1
 
     def get_local_file(self, filename, i):
-        if (i > 6):
+        if i > 6:
             return -1
 
         file_size = self.get_file_size(filename)
 
-        if (file_size > 0):
+        if file_size > 0:
             return open(filename, "rb")
         else:
-            time.sleep(1) # sometimes file is empty when we try to upload it
-            i = i+1
+            time.sleep(1)  # sometimes file is empty when we try to upload it
+            i = i + 1
             return self.get_local_file(filename, i)
 
     def files_upload(self, path_local, path_remote):
         file_local = self.get_local_file(path_local, 0)
         logger.debug("Uploading %s to Dropbox as %s", path_local, path_remote)
 
-        # We use WriteMode=overwrite to make sure that the settings in the file are changed on upload
+        # We use WriteMode=overwrite to make sure that the settings
+        # in the file are changed on upload
         try:
             success = self.client.files_upload(
                 file_local.read(),
@@ -147,7 +149,9 @@ class DropboxUploader(object):
             try:
                 link = self.check_if_link_is_created(path)
                 if (link == 0):
-                    success = self.client.sharing_create_shared_link_with_settings(path=path, settings=None)
+                    success = self.client.sharing_create_shared_link_with_settings(
+                        path=path, settings=None
+                    )
                 else:
                     success = link
 
@@ -155,6 +159,7 @@ class DropboxUploader(object):
             except Exception as e:
                 logger.error("Trying %s time: Error to create shared link %r", i, e)
                 time.sleep(i * 1.5)
+
 
 def main():
     """
