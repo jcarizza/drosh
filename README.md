@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/jcarizza/drosh.svg?branch=master)](https://travis-ci.com/jcarizza/drosh)
+
 # Drosh
 Use your favourite screenshot tool and let Drosh script upload it to Dropbox and create a shared link
 
