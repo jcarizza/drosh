@@ -13,6 +13,9 @@ install:
 script:
     - "./tests"
 
+after_success:
+    - "coveralls"
+
 cache:
   apt: true
   pip: true
