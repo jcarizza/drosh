@@ -39,9 +39,7 @@ class ScreenshotHandler(object):
         return self.url
 
     def notify(self, title, body):
-        """
-        Send a desktop message
-        """
+        """Send a desktop message."""
         try:
             subprocess.call(["notify-send", title, body])
         except FileNotFoundError:
@@ -49,9 +47,7 @@ class ScreenshotHandler(object):
             subprocess.run(["kdialog", "--title", title, "--passivepopup", body, "5"])
 
     def upload_file(self, path):
-        """
-        Upload file
-        """
+        """Upload file."""
 
         path_local = os.path.join(DROSH_SCREENSHOT_FOLDER, os.path.basename(path))
         path_remote = os.path.join(DROSH_DROPBOX_FOLDER, os.path.basename(path))
@@ -70,9 +66,7 @@ class ScreenshotHandler(object):
             logger.debug("Error in upload %r file", path_remote)
 
     def create_shared_link(self, path):
-        """
-        Create shared link
-        """
+        """Create shared link."""
 
         result = self.uploader.create_shared_link(path)
         if result is not None:
@@ -162,10 +156,8 @@ class DropboxUploader(object):
 
 
 def main():
-    """
-    Watch for new files where screenshots are saved and create the shared link
-    once the file is uploaded by Dropbox client
-    """
+    """Watch for new files where screenshots are saved and create the shared link
+    once the file is uploaded by Dropbox client."""
 
     i = inotify.adapters.Inotify()
     i.add_watch(DROSH_SCREENSHOT_FOLDER)
